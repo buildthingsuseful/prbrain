@@ -110,6 +110,10 @@ build/
 # ESLint cache
 .eslintcache
 
-# Keep the bundled dist/index.js for GitHub Actions
+# Keep the bundled dist for GitHub Actions
+!dist/
+dist/*
 !dist/index.js
 !dist/index.js.map
+!dist/licenses.txt
+!dist/sourcemap-register.js
