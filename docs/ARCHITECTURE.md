@@ -316,7 +316,6 @@ interface LLMProvider {
 ### Planned Providers
 - **Anthropic Adapter**: Claude for analysis
 - **Local Model Adapter**: Ollama/LocalAI support
-- **Azure OpenAI**: Enterprise OpenAI deployment
 - **Google PaLM**: Google's LLM services
 
 ## 🛠️ Configuration System

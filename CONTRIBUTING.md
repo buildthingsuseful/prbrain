@@ -31,7 +31,7 @@ npm run dev
 ### 1. 🐛 Reporting Bugs
 
 Before creating a bug report, please:
-- Check if the bug has already been reported in [Issues](https://github.com/your-org/prbrain/issues)
+- Check if the bug has already been reported in [Issues](https://github.com/buildthingsuseful/prbrain/issues)
 - Try to reproduce the issue with the latest version
 
 **Create a bug report with:**
