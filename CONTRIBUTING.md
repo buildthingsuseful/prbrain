@@ -1,342 +1,97 @@
 # Contributing to PRBrain
 
-Thank you for your interest in contributing to PRBrain! 🎉 This guide will help you get started with contributing to our AI-powered PR analysis tool.
+Thanks for wanting to help! PRBrain is free and open source, and we welcome contributions of all kinds.
 
-## 🚀 Quick Start
+## Ways to Contribute
 
-### Prerequisites
-- Node.js 18 or higher
-- npm or yarn package manager
-- Git
+- 🐛 **Report bugs** — [Open an issue](https://github.com/buildthingsuseful/prbrain/issues/new?template=bug_report.md)
+- 💡 **Suggest features** — [Open an issue](https://github.com/buildthingsuseful/prbrain/issues/new?template=feature_request.md)
+- 🔧 **Fix bugs or add features** — Fork, branch, PR
+- 📝 **Improve docs** — Typos, clarity, examples
+- 🧪 **Add tests** — More coverage is always welcome
 
-### Setup Development Environment
+## Getting Started
 
 ```bash
-# 1. Fork and clone the repository
-git clone https://github.com/YOUR-USERNAME/prbrain.git
+git clone https://github.com/buildthingsuseful/prbrain.git
 cd prbrain
-
-# 2. Install dependencies
 npm install
-
-# 3. Run tests to ensure everything works
-npm test
-
-# 4. Start development mode (if applicable)
-npm run dev
 ```
 
-## 📋 How to Contribute
-
-### 1. 🐛 Reporting Bugs
-
-Before creating a bug report, please:
-- Check if the bug has already been reported in [Issues](https://github.com/buildthingsuseful/prbrain/issues)
-- Try to reproduce the issue with the latest version
-
-**Create a bug report with:**
-- Clear, descriptive title
-- Steps to reproduce the bug
-- Expected vs actual behavior
-- Environment details (Node version, OS, etc.)
-- Relevant error messages or logs
-
-**Template:**
-```markdown
-**Bug Description**
-A clear description of what the bug is.
-
-**To Reproduce**
-1. Step 1
-2. Step 2
-3. See error
-
-**Expected Behavior**
-What should have happened.
-
-**Environment**
-- OS: [e.g., macOS 13.0]
-- Node: [e.g., 18.17.0]
-- PRBrain version: [e.g., 1.2.0]
+### Run Tests
+```bash
+npx vitest run
 ```
 
-### 2. 💡 Feature Requests
-
-We welcome feature suggestions! Please:
-- Check existing feature requests first
-- Provide clear use cases and benefits
-- Consider if it fits PRBrain's core mission
-
-**Template:**
-```markdown
-**Feature Description**
-A clear description of the feature you'd like to see.
-
-**Use Case**
-Why would this be useful? What problem does it solve?
-
-**Proposed Solution**
-How do you envision this working?
-
-**Alternatives**
-Any alternative solutions you've considered?
+### Type Check
+```bash
+npx tsc --noEmit
 ```
 
-### 3. 🔧 Code Contributions
-
-#### Types of Contributions We Need
-- **Bug fixes**: Resolve reported issues
-- **New features**: Implement planned enhancements  
-- **Documentation**: Improve guides and API docs
-- **Tests**: Increase test coverage
-- **Performance**: Optimize existing functionality
-- **Refactoring**: Improve code quality and structure
-
-#### Development Workflow
-
-1. **Create an Issue** (for new features/major changes)
-2. **Fork the Repository**
-3. **Create a Feature Branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   # or
-   git checkout -b fix/bug-description
-   ```
-
-4. **Make Your Changes**
-   - Follow our coding standards (see below)
-   - Add/update tests as needed
-   - Update documentation if required
-
-5. **Test Your Changes**
-   ```bash
-   # Run the full test suite
-   npm test
-   
-   # Check for TypeScript errors
-   npm run type-check
-   
-   # Run linting
-   npm run lint
-   
-   # Build to ensure it compiles
-   npm run build
-   ```
-
-6. **Commit Your Changes**
-   ```bash
-   git add .
-   git commit -m "feat: add intelligent code complexity analysis"
-   ```
-   
-   Follow [Conventional Commits](https://www.conventionalcommits.org/):
-   - `feat:` new features
-   - `fix:` bug fixes
-   - `docs:` documentation changes
-   - `test:` adding or updating tests
-   - `refactor:` code refactoring
-   - `perf:` performance improvements
-
-7. **Push and Create Pull Request**
-   ```bash
-   git push origin your-branch-name
-   ```
-
-#### Pull Request Guidelines
-
-**Before submitting:**
-- [ ] Tests pass locally (`npm test`)
-- [ ] Code follows our style guide
-- [ ] Documentation is updated (if needed)
-- [ ] Commit messages follow conventions
-- [ ] Branch is up to date with `main`
-
-**PR Description should include:**
-- What changes were made and why
-- Links to related issues
-- Screenshots (for UI changes)
-- Testing notes for reviewers
-
-**Example PR Template:**
-```markdown
-## Description
-Brief description of what this PR does.
-
-## Related Issues
-Fixes #123
-Related to #456
-
-## Changes Made
-- Added X feature
-- Fixed Y bug  
-- Updated Z documentation
-
-## Testing
-- [ ] All tests pass
-- [ ] Manually tested [describe scenarios]
-- [ ] Added new tests for [feature/fix]
-
-## Screenshots (if applicable)
-[Add screenshots for UI changes]
+### Build
+```bash
+npx @vercel/ncc build src/index.ts -o dist --license licenses.txt
 ```
 
-## 📝 Coding Standards
+## Making a Pull Request
 
-### TypeScript Guidelines
-- Use TypeScript for all new code
-- Enable strict mode settings
-- Prefer explicit types over `any`
-- Use meaningful variable and function names
+1. **Fork** the repo
+2. **Create a branch** from `main`: `git checkout -b my-fix`
+3. **Make your changes** — keep them focused
+4. **Run tests** — all 58 must pass
+5. **Commit** with a clear message
+6. **Push** and open a PR against `main`
 
-### Code Style
-- Use Prettier for formatting (config in `.prettierrc`)
-- Use ESLint for code quality (config in `.eslintrc`)
-- Follow existing patterns in the codebase
+### PR Guidelines
 
-### File Organization
+- Keep PRs small and focused — one thing per PR
+- Add tests for new features or bug fixes
+- Update docs if you change behavior
+- PRBrain will analyze your PR automatically 🧠
+
+### What Makes a Good PR
+
+- Clear title that explains *what*, not *how*
+- Description explaining *why* the change is needed
+- Tests that cover the change
+- No unrelated changes mixed in
+
+## Code Style
+
+- TypeScript strict mode
+- No `any` types unless absolutely necessary
+- Descriptive variable names
+- Comments for *why*, not *what*
+
+## Project Structure
+
 ```
 src/
-├── core/           # Core analysis engines
-├── adapters/       # External service integrations
-├── utils/          # Utility functions  
-├── types/          # TypeScript type definitions
-└── config/         # Configuration constants
-
-test/               # Test files (mirror src structure)
-docs/               # Documentation
+├── index.ts              # GitHub Action entrypoint
+├── core/                 # Analysis engines
+│   ├── intent-extractor  # Reverse-engineers PR intent
+│   ├── ai-detector       # Detects AI-generated code
+│   ├── dedup             # Finds duplicate PRs/issues
+│   ├── vision-checker    # Checks alignment with VISION.md
+│   ├── quality-scorer    # Scores PR quality
+│   └── comment-formatter # Formats the GitHub comment
+├── adapters/             # External integrations
+│   ├── github            # GitHub API
+│   ├── openai            # OpenAI API
+│   └── storage           # Vector storage
+├── config/               # Configuration schema
+├── types/                # TypeScript types
+└── utils/                # Diff parser, tokenizer, logger
 ```
 
-### Testing Standards
-- Write tests for all new functionality
-- Aim for high test coverage (>90%)
-- Use descriptive test names
-- Group related tests with `describe` blocks
-- Mock external dependencies
+## Good First Issues
 
-**Test Structure:**
-```typescript
-describe('FeatureName', () => {
-  describe('methodName', () => {
-    it('should handle normal case correctly', () => {
-      // Arrange
-      const input = createTestInput();
-      
-      // Act  
-      const result = methodName(input);
-      
-      // Assert
-      expect(result).toBe(expectedOutput);
-    });
-    
-    it('should handle edge case gracefully', () => {
-      // Test edge cases
-    });
-  });
-});
-```
-
-## 🏗️ Architecture Guidelines
-
-### Core Principles
-- **Single Responsibility**: Each module has one clear purpose
-- **Dependency Injection**: Use dependency injection for testability
-- **Error Handling**: Always handle errors gracefully
-- **Async/Await**: Prefer async/await over Promises chains
-
-### Adding New Analysis Features
-When adding new AI-powered analysis:
-
-1. **Create Core Analyzer**: Add to `src/core/`
-2. **Define Types**: Update `src/types/`
-3. **Add Configuration**: Update config schema
-4. **Write Tests**: Comprehensive test coverage
-5. **Update Documentation**: Add to relevant docs
-
-**Example Structure:**
-```typescript
-// src/core/new-analyzer.ts
-export class NewAnalyzer {
-  constructor(private llmAdapter: LLMAdapter) {}
-  
-  async analyze(context: PRContext): Promise<AnalysisResult> {
-    // Implementation
-  }
-}
-
-// src/types/index.ts  
-export interface AnalysisResult {
-  // Type definitions
-}
-
-// test/new-analyzer.test.ts
-describe('NewAnalyzer', () => {
-  // Comprehensive tests
-});
-```
-
-## 🤝 Community Guidelines
-
-### Code of Conduct
-- Be respectful and inclusive
-- Provide constructive feedback
-- Help others learn and grow
-- Focus on the code, not the person
-
-### Communication Channels
-- **GitHub Issues**: Bug reports and feature requests
-- **Pull Request Discussions**: Code review and implementation details
-- **GitHub Discussions**: General questions and community chat
-
-### Getting Help
-- Check existing documentation first
-- Search closed issues for solutions
-- Ask questions in GitHub Discussions
-- Be specific about your problem and environment
-
-## 🎯 Areas Where We Need Help
-
-### High Priority
-- [ ] **Performance Optimization**: Make analysis faster for large PRs
-- [ ] **Additional LLM Providers**: Add support for Claude, local models
-- [ ] **Documentation**: Improve API documentation and guides
-- [ ] **Test Coverage**: Increase coverage in adapter modules
-
-### Medium Priority  
-- [ ] **UI Improvements**: Better PR comment formatting
-- [ ] **Configuration Validation**: Better error messages for invalid config
-- [ ] **Localization**: Support for non-English repositories
-- [ ] **Caching**: Implement intelligent caching for repeated analysis
-
-### Good First Issues
-Look for issues labeled `good first issue` - these are perfect for new contributors!
-
-## 📚 Resources
-
-### Learning Materials
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
-- [Testing with Vitest](https://vitest.dev/guide/)
-
-### PRBrain-Specific
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Configuration Guide](docs/CONFIGURATION.md)
-- [API Documentation](docs/API.md)
-
-## 🏆 Recognition
-
-We believe in recognizing contributions! Contributors will be:
-- Added to our Contributors list
-- Mentioned in release notes
-- Invited to our contributor Discord (coming soon)
-- Eligible for contributor swag (coming soon)
-
----
+Look for issues tagged [`good first issue`](https://github.com/buildthingsuseful/prbrain/labels/good%20first%20issue) — these are great starting points.
 
 ## Questions?
 
-Don't hesitate to ask! We're here to help:
-- Open a [GitHub Discussion](https://github.com/your-org/prbrain/discussions)
-- Comment on relevant issues
-- Reach out to maintainers
+Open an issue or start a discussion. No question is too small.
 
-**Thank you for making PRBrain better for everyone!** 🚀
+---
+
+Thanks for helping make PR review better for everyone! 🙌
