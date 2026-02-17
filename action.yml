@@ -1,0 +1,21 @@
+name: 'PRBrain - AI PR Analyzer'
+description: 'Analyzes pull requests for AI generation, intent extraction, deduplication, and quality scoring'
+author: 'PRBrain Team'
+inputs:
+  openai-api-key:
+    description: 'OpenAI API key for LLM analysis'
+    required: true
+  github-token:
+    description: 'GitHub token for API access'
+    required: false
+    default: ${{ github.token }}
+  config-path:
+    description: 'Path to PRBrain configuration file'
+    required: false
+    default: '.prbrain.yml'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+branding:
+  icon: 'brain'
+  color: 'purple'

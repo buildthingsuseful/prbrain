@@ -1,0 +1,91 @@
+diff --git a/src/utils/dataProcessor.ts b/src/utils/dataProcessor.ts
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/src/utils/dataProcessor.ts
+@@ -0,0 +1,78 @@
++import { DataItem, ProcessedResult, ValidationError } from '../types/dataTypes';
++
++/**
++ * A comprehensive data processing utility that handles various data transformations
++ * and provides robust error handling with detailed logging capabilities.
++ * This class implements the singleton pattern to ensure consistent data processing
++ * across the entire application lifecycle.
++ */
++export class DataProcessor {
++  private static dataProcessorInstance: DataProcessor | null = null;
++  private readonly processingConfiguration: ProcessingConfig;
++  private readonly validationRulesRegistry: ValidationRulesRegistry;
++
++  /**
++   * Private constructor to implement singleton pattern
++   * Initializes all necessary components for data processing operations
++   */
++  private constructor() {
++    // Initialize the processing configuration with default values
++    this.processingConfiguration = this.initializeProcessingConfiguration();
++    // Set up the validation rules registry for comprehensive data validation
++    this.validationRulesRegistry = this.setupValidationRulesRegistry();
++  }
++
++  /**
++   * Static method to get the singleton instance of DataProcessor
++   * Ensures that only one instance exists throughout the application
++   * @returns {DataProcessor} The singleton instance
++   */
++  public static getDataProcessorInstance(): DataProcessor {
++    if (DataProcessor.dataProcessorInstance === null) {
++      DataProcessor.dataProcessorInstance = new DataProcessor();
++    }
++    return DataProcessor.dataProcessorInstance;
++  }
++
++  /**
++   * Processes the input data array and returns processed results
++   * Implements comprehensive error handling and validation
++   * @param inputDataArray - Array of data items to process
++   * @returns Promise<ProcessedResult[]> - Array of processed results
++   * @throws {ValidationError} When input data fails validation
++   */
++  public async processDataArray(inputDataArray: DataItem[]): Promise<ProcessedResult[]> {
++    try {
++      // First, validate that the input data array is not null or undefined
++      if (!inputDataArray || !Array.isArray(inputDataArray)) {
++        throw new ValidationError('Input data array must be a valid array');
++      }
++
++      // Initialize the results array to store processed items
++      const processedResultsArray: ProcessedResult[] = [];
++
++      // Iterate through each data item in the input array
++      for (const currentDataItem of inputDataArray) {
++        try {
++          // Validate the current data item against our validation rules
++          const validationResult = await this.validateDataItem(currentDataItem);
++          if (!validationResult.isValid) {
++            throw new ValidationError(`Validation failed: ${validationResult.errorMessage}`);
++          }
++
++          // Process the validated data item
++          const processedItem = await this.transformDataItem(currentDataItem);
++          
++          // Add the processed item to our results array
++          processedResultsArray.push(processedItem);
++        } catch (itemProcessingError) {
++          // Log the error for debugging purposes
++          console.error(`Error processing data item:`, itemProcessingError);
++          // Re-throw the error to maintain error propagation
++          throw itemProcessingError;
++        }
++      }
++
++      // Return the complete array of processed results
++      return processedResultsArray;
++    } catch (processingError) {
++      // Log the overall processing error
++      console.error(`Data processing failed:`, processingError);
++      // Re-throw the error to allow calling code to handle it appropriately
++      throw processingError;
++    }
++  }
++}
