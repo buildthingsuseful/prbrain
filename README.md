@@ -4,6 +4,8 @@
 
 Free and open source. Built to help developers everywhere. 🌍
 
+[![CI](https://github.com/buildthingsuseful/prbrain/actions/workflows/ci.yml/badge.svg)](https://github.com/buildthingsuseful/prbrain/actions/workflows/ci.yml)
+[![GitHub release](https://img.shields.io/github/v/release/buildthingsuseful/prbrain)](https://github.com/buildthingsuseful/prbrain/releases)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 🚀 Quick Start
