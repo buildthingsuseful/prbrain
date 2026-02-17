@@ -87,7 +87,7 @@ index 1234567..abcdefg 100644
           filesChanged: 2,
           linesAdded: 6,
           linesDeleted: 0,
-          description: '2 files changed | +6 | Small change',
+          description: '2 files changed | 6 lines added | Small change',
         },
         gaps: [],
       });
