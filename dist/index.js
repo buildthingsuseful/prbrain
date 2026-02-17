@@ -1,4 +1,4 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 4914:
@@ -36027,16 +36027,18 @@ class OpenAIAdapter {
         }
     }
     async extractIntent(diff, title, body) {
-        const systemMessage = `You are an expert code reviewer and developer intent analyzer. Your job is to reverse-engineer the likely intent behind a pull request from its diff and metadata.
+        const systemMessage = `You reverse-engineer the likely prompt or intent behind a pull request.
 
-Analyze the provided diff and infer:
-1. The original prompt or intent that likely led to these changes
-2. A concise summary of what the PR accomplishes
-3. Your confidence level (0-100) in the intent inference
-4. Key changes made (bullet points)
-5. Any gaps or missing implementations
+Write like a human engineer, not like an AI. Be direct and concise. Avoid corporate jargon, filler words, and phrases like "thereby enhancing" or "facilitating the implementation of."
 
-Respond in JSON format with these fields: intent, summary, confidence, keyChanges (array), gaps (array).`;
+From the diff and metadata, infer:
+1. intent — What prompt or goal likely produced this PR? Write it as a short, natural sentence a developer would actually say. Example: "Add rate limiting to the public API" not "Implement a rate limiting utility to safeguard API endpoints against excessive requests, thereby enhancing stability."
+2. summary — One plain sentence about what the PR does.
+3. confidence — 0-100 how sure you are about the intent.
+4. keyChanges — Short bullet points. Start with a verb. Example: "Added RateLimitConfig interface" not "Introduced a RateLimitConfig interface to define configuration options for the rate limiter."
+5. gaps — What's missing? Be specific and brief. Each gap is its own string.
+
+Respond in JSON: { intent, summary, confidence, keyChanges: string[], gaps: string[] }`;
         const prompt = `PR Title: ${title}
 PR Body: ${body || 'No description provided'}
 
@@ -36856,7 +36858,7 @@ class CommentFormatter {
             confidenceLabel = 'Low';
         else
             confidenceLabel = 'Very Low';
-        let result = `${emoji} **${label}:** ${confidenceLabel} confidence (${confidence}%)`;
+        let result = `${emoji} **${label}:** ${confidenceLabel} (${confidence}%)`;
         // Add top signals if AI is detected
         if (detection.isAIGenerated && detection.signals.length > 0) {
             const topSignals = detection.signals
@@ -36865,24 +36867,31 @@ class CommentFormatter {
                 .map(s => s.indicator)
                 .join(', ');
             if (topSignals) {
-                result += `\n*Signals: ${topSignals}*`;
+                result += `\n> ${topSignals}`;
             }
         }
         return result;
     }
     formatIntentExtraction(intent) {
         const sections = [];
-        sections.push(`📝 **Inferred Intent:** "${intent.inferredIntent}"`);
-        sections.push(`🎯 **Summary:** ${intent.summary}`);
-        sections.push(`📊 **Scope:** ${intent.scope.description}`);
+        sections.push(`💡 **Prompt Intent:** ${intent.inferredIntent}`);
+        sections.push('');
+        sections.push(`**What it does:** ${intent.summary}`);
+        sections.push('');
+        sections.push(`**Scope:** ${intent.scope.description}`);
         if (intent.keyChanges.length > 0) {
-            sections.push('**Key Changes:**');
+            sections.push('');
+            sections.push('**Changes:**');
             intent.keyChanges.slice(0, 5).forEach(change => {
-                sections.push(`  • ${change}`);
+                sections.push(`- ${change}`);
             });
         }
         if (intent.gaps.length > 0) {
-            sections.push(`⚠️ **Potential Gaps:** ${intent.gaps.join(', ')}`);
+            sections.push('');
+            sections.push('**⚠️ Gaps:**');
+            intent.gaps.forEach(gap => {
+                sections.push(`- ${gap}`);
+            });
         }
         return sections.join('\n');
     }
@@ -36932,13 +36941,15 @@ class CommentFormatter {
     formatQualityScore(quality) {
         const sections = [];
         sections.push(`### 📊 Quality Score: ${quality.overallScore}/${quality.maxScore}`);
+        sections.push('');
         // Group factors by status
         const passingFactors = quality.factors.filter(f => f.status === 'pass');
         const warningFactors = quality.factors.filter(f => f.status === 'warning');
         const failingFactors = quality.factors.filter(f => f.status === 'fail');
-        if (passingFactors.length > 0) {
-            passingFactors.forEach(factor => {
-                sections.push(`- ✅ ${factor.description}`);
+        // Show failures and warnings first, then passes
+        if (failingFactors.length > 0) {
+            failingFactors.forEach(factor => {
+                sections.push(`- ❌ ${factor.description}`);
             });
         }
         if (warningFactors.length > 0) {
@@ -36946,17 +36957,9 @@ class CommentFormatter {
                 sections.push(`- ⚠️ ${factor.description}`);
             });
         }
-        if (failingFactors.length > 0) {
-            failingFactors.forEach(factor => {
-                sections.push(`- ❌ ${factor.description}`);
-            });
-        }
-        // Add summary points
-        if (quality.summary.length > 0) {
-            sections.push('');
-            sections.push('**Summary:**');
-            quality.summary.forEach(point => {
-                sections.push(`• ${point}`);
+        if (passingFactors.length > 0) {
+            passingFactors.forEach(factor => {
+                sections.push(`- ✅ ${factor.description}`);
             });
         }
         return sections.join('\n');
@@ -37398,7 +37401,7 @@ class IntentExtractor {
                 inferredIntent: analysis.intent || this.fallbackIntentFromTitle(context.title),
                 summary: analysis.summary || this.createFallbackSummary(context),
                 confidence: Math.max(0, Math.min(100, analysis.confidence || 50)),
-                keyChanges: analysis.keyChanges?.length > 0 ? analysis.keyChanges : keyChanges,
+                keyChanges: (analysis.keyChanges?.length > 0 ? analysis.keyChanges : keyChanges).slice(0, 8),
                 scope,
                 gaps: analysis.gaps || [],
             };
@@ -64122,4 +64125,3 @@ module.exports = /*#__PURE__*/JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map

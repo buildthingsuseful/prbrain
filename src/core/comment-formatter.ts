@@ -58,7 +58,7 @@ export class CommentFormatter {
     else if (confidence >= 30) confidenceLabel = 'Low';
     else confidenceLabel = 'Very Low';
 
-    let result = `${emoji} **${label}:** ${confidenceLabel} confidence (${confidence}%)`;
+    let result = `${emoji} **${label}:** ${confidenceLabel} (${confidence}%)`;
 
     // Add top signals if AI is detected
     if (detection.isAIGenerated && detection.signals.length > 0) {
@@ -69,7 +69,7 @@ export class CommentFormatter {
         .join(', ');
       
       if (topSignals) {
-        result += `\n*Signals: ${topSignals}*`;
+        result += `\n> ${topSignals}`;
       }
     }
 
@@ -79,19 +79,26 @@ export class CommentFormatter {
   private formatIntentExtraction(intent: IntentExtractionResult): string {
     const sections: string[] = [];
     
-    sections.push(`📝 **Inferred Intent:** "${intent.inferredIntent}"`);
-    sections.push(`🎯 **Summary:** ${intent.summary}`);
-    sections.push(`📊 **Scope:** ${intent.scope.description}`);
+    sections.push(`💡 **Prompt Intent:** ${intent.inferredIntent}`);
+    sections.push('');
+    sections.push(`**What it does:** ${intent.summary}`);
+    sections.push('');
+    sections.push(`**Scope:** ${intent.scope.description}`);
 
     if (intent.keyChanges.length > 0) {
-      sections.push('**Key Changes:**');
+      sections.push('');
+      sections.push('**Changes:**');
       intent.keyChanges.slice(0, 5).forEach(change => {
-        sections.push(`  • ${change}`);
+        sections.push(`- ${change}`);
       });
     }
 
     if (intent.gaps.length > 0) {
-      sections.push(`⚠️ **Potential Gaps:** ${intent.gaps.join(', ')}`);
+      sections.push('');
+      sections.push('**⚠️ Gaps:**');
+      intent.gaps.forEach(gap => {
+        sections.push(`- ${gap}`);
+      });
     }
 
     return sections.join('\n');
@@ -156,14 +163,17 @@ export class CommentFormatter {
     
     sections.push(`### 📊 Quality Score: ${quality.overallScore}/${quality.maxScore}`);
     
+    sections.push('');
+
     // Group factors by status
     const passingFactors = quality.factors.filter(f => f.status === 'pass');
     const warningFactors = quality.factors.filter(f => f.status === 'warning');
     const failingFactors = quality.factors.filter(f => f.status === 'fail');
 
-    if (passingFactors.length > 0) {
-      passingFactors.forEach(factor => {
-        sections.push(`- ✅ ${factor.description}`);
+    // Show failures and warnings first, then passes
+    if (failingFactors.length > 0) {
+      failingFactors.forEach(factor => {
+        sections.push(`- ❌ ${factor.description}`);
       });
     }
 
@@ -173,18 +183,9 @@ export class CommentFormatter {
       });
     }
 
-    if (failingFactors.length > 0) {
-      failingFactors.forEach(factor => {
-        sections.push(`- ❌ ${factor.description}`);
-      });
-    }
-
-    // Add summary points
-    if (quality.summary.length > 0) {
-      sections.push('');
-      sections.push('**Summary:**');
-      quality.summary.forEach(point => {
-        sections.push(`• ${point}`);
+    if (passingFactors.length > 0) {
+      passingFactors.forEach(factor => {
+        sections.push(`- ✅ ${factor.description}`);
       });
     }
 

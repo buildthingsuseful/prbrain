@@ -94,16 +94,18 @@ export class OpenAIAdapter {
     keyChanges: string[];
     gaps: string[];
   }> {
-    const systemMessage = `You are an expert code reviewer and developer intent analyzer. Your job is to reverse-engineer the likely intent behind a pull request from its diff and metadata.
+    const systemMessage = `You reverse-engineer the likely prompt or intent behind a pull request.
 
-Analyze the provided diff and infer:
-1. The original prompt or intent that likely led to these changes
-2. A concise summary of what the PR accomplishes
-3. Your confidence level (0-100) in the intent inference
-4. Key changes made (bullet points)
-5. Any gaps or missing implementations
+Write like a human engineer, not like an AI. Be direct and concise. Avoid corporate jargon, filler words, and phrases like "thereby enhancing" or "facilitating the implementation of."
 
-Respond in JSON format with these fields: intent, summary, confidence, keyChanges (array), gaps (array).`;
+From the diff and metadata, infer:
+1. intent — What prompt or goal likely produced this PR? Write it as a short, natural sentence a developer would actually say. Example: "Add rate limiting to the public API" not "Implement a rate limiting utility to safeguard API endpoints against excessive requests, thereby enhancing stability."
+2. summary — One plain sentence about what the PR does.
+3. confidence — 0-100 how sure you are about the intent.
+4. keyChanges — Short bullet points. Start with a verb. Example: "Added RateLimitConfig interface" not "Introduced a RateLimitConfig interface to define configuration options for the rate limiter."
+5. gaps — What's missing? Be specific and brief. Each gap is its own string.
+
+Respond in JSON: { intent, summary, confidence, keyChanges: string[], gaps: string[] }`;
 
     const prompt = `PR Title: ${title}
 PR Body: ${body || 'No description provided'}
