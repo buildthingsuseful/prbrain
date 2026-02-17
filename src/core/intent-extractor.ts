@@ -178,11 +178,11 @@ export class IntentExtractor {
     let description = `${filesChanged} file${filesChanged !== 1 ? 's' : ''} changed`;
     
     if (linesAdded > 0 && linesDeleted > 0) {
-      description += ` | +${linesAdded} -${linesDeleted}`;
+      description += ` | ${linesAdded} lines added, ${linesDeleted} removed`;
     } else if (linesAdded > 0) {
-      description += ` | +${linesAdded}`;
+      description += ` | ${linesAdded} lines added`;
     } else if (linesDeleted > 0) {
-      description += ` | -${linesDeleted}`;
+      description += ` | ${linesDeleted} lines removed`;
     }
 
     // Add change category
